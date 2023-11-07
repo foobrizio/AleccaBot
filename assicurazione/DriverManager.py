@@ -17,7 +17,7 @@ class DriverManager:
             "download.directory_upgrade": True,
             "safebrowsing.enabled": True
         })
-        #options.add_argument("--headless")
+        options.add_argument("--headless")
         self.driver = webdriver.Chrome(options=options)
         self.wait = WebDriverWait(webdriver, 10)
 

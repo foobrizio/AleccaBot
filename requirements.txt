@@ -2,4 +2,4 @@ selenium
 PyPDF2
 pyTelegramBotAPI
 telebot
-python-telegram-bot
+#python-telegram-bot
