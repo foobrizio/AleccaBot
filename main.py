@@ -2,5 +2,4 @@
 
 if __name__ == '__main__':
     pass
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # At the moment, the bot can be executed from ./bot/TelegramBot.py
