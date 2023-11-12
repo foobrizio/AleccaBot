@@ -1,7 +1,7 @@
 import time
 from threading import Event
 
-from telebot import TeleBot
+from telebot import *
 
 import Consts
 from assicurazione.CheckAssicurazione import CheckAssicurazione
@@ -15,6 +15,15 @@ from assicurazione.CheckAssicurazione import CheckAssicurazione
 #    function logic.
 
 class BotFunctions:
+
+    @staticmethod
+    def set_default_commands(bot: TeleBot):
+        bot.set_my_commands([
+            telebot.types.BotCommand("/hello", "Sends a welcome message"),
+            telebot.types.BotCommand("/subscribe_test", "Activate the test thread. Just for didactic purpose"),
+            telebot.types.BotCommand("/subscribe_assicurazione", "Activate the assicurazione thread. "),
+            telebot.types.BotCommand("/unsubscribe", "Unsubscribes from an active subscription")
+        ])
 
     @staticmethod
     def send_message(event: Event, bot: TeleBot,  chat_id, message: str):

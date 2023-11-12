@@ -1,15 +1,13 @@
-import threading
-
 import telebot
+from telebot.types import *
 import Consts
-import time
 
-from assicurazione.CheckAssicurazione import CheckAssicurazione
 from BotFunctions import BotFunctions as bf
-from threads.ThreadManager import ThreadManager
+from bot.SubscriptionManager import SubscriptionManager
 
 bot = telebot.TeleBot(Consts.bot_token, threaded=False)
-thread_manager = ThreadManager()
+bf.set_default_commands(bot)
+sub_mgr = SubscriptionManager()
 
 
 @bot.message_handler(commands=['start', 'hello'])
@@ -22,12 +20,16 @@ def send_welcome(message):
     #bot.reply_to(message, "Ciao "+message.from_user.first_name+". Come va?")
 
 
+# region THREAD SUBSCRIPTION
+
 @bot.message_handler(commands=['subscribe_test'])
 def subscribe_to_test(message):
+    subscription_name = "Test"
     name = message.from_user.first_name
     chat_id = message.from_user.id
-    if not thread_manager.has_running_elements(chat_id):
-        thread_manager.start_thread(chat_id=chat_id,
+    if not sub_mgr.is_subscribed(chat_id, subscription_name):
+        sub_mgr.start_thread(chat_id=chat_id,
+                                    name=subscription_name,
                                     target=bf.send_message,
                                     args=(bot, chat_id, "Questo è un test"))
         bot.reply_to(message, "Perfetto, "+name+". Da ora riceverai aggiornamenti sulla tua assicurazione")
@@ -35,24 +37,15 @@ def subscribe_to_test(message):
         bot.reply_to(message, "Sei già iscritto")
 
 
-# TODO: Right now there is no way to distinguish between assicurazione thread and test thread.
-@bot.message_handler(commands=['unsubscribe_test'])
-def unsubscribe_from_test(message):
-    chat_id = message.from_user.id
-    if thread_manager.has_running_elements(chat_id):
-        thread_manager.stop_thread(chat_id=chat_id)
-        bot.reply_to(message, "Come vuoi. Da ora non riceverai più aggiornamenti sul test")
-    else:
-        bot.reply_to(message, "Non sei iscritto")
-
-
 @bot.message_handler(commands=['subscribe_assicurazione'])
 def subscribe_to_assicurazione(message):
+    subscription_name = "Assicurazione"
     name = message.from_user.first_name
     chat_id = message.from_user.id
-    if not thread_manager.has_running_elements(chat_id):
+    if not sub_mgr.is_subscribed(chat_id, subscription_name):
         #threading.Thread(target=send_message, args=(chat_id, "Prova"), daemon=True).start()
-        thread_manager.start_thread(chat_id=chat_id,
+        sub_mgr.start_thread(chat_id=chat_id,
+                                    name=subscription_name,
                                     target=bf.check_assicurazione,
                                     args=(bot, chat_id))
         bot.reply_to(message, "Perfetto, "+name+". Da ora riceverai aggiornamenti sulla tua assicurazione")
@@ -60,20 +53,34 @@ def subscribe_to_assicurazione(message):
         bot.reply_to(message, "Sei già iscritto")
 
 
-@bot.message_handler(commands=['unsubscribe_assicurazione'])
-def unsubscribe_from_assicurazione(message):
+# endregion
+
+
+# TODO: Set the two buttons for the user and capture the answer
+@bot.message_handler(commands=['unsubscribe'])
+def unsubscribe(message):
     chat_id = message.from_user.id
-    if thread_manager.has_running_elements(chat_id):
-        thread_manager.stop_thread(chat_id=chat_id)
-        bot.reply_to(message, "Come vuoi. Da ora non riceverai più aggiornamenti sulla tua assicurazione")
+    if sub_mgr.has_running_elements(chat_id):
+        elements = sub_mgr.get_running_elements(chat_id)
+        print(elements)
+        if len(elements) > 1:
+            # We have to let the user choose which subscription to cancel
+            buttons = ReplyKeyboardMarkup(one_time_keyboard=True, selective=True)
+            #for elem in elements:
+            #    buttons.add(InlineKeyboardButton(text=elem[0]))
+
+            buttons.row_width = 2
+            button1 = InlineKeyboardButton(text="/New_settings", callback_data="test")
+            button2 = InlineKeyboardButton(text="/Old_settings", callback_data="test")
+            buttons.add(button1, button2)
+            bot.send_message(chat_id=chat_id,
+                             text="Quale sottoscrizione vuoi annullare?",
+                             reply_markup=buttons)
+
+        sub_mgr.stop_thread(chat_id=chat_id, thread_name="test")
+        bot.reply_to(message, "Come vuoi. Da ora non riceverai più aggiornamenti sul test")
     else:
         bot.reply_to(message, "Non sei iscritto")
-
-
-def send_message(event: threading.Event, chat_id, message: str):
-    while not event.is_set():
-        bot.send_message(chat_id=chat_id, text=message)
-        time.sleep(5)
 
 
 # Start the bot polling in a separate thread
