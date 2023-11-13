@@ -46,11 +46,6 @@ class BotFunctions:
                 cont = 0
             time.sleep(1)
             cont = cont+1
-            # We don't need to execute this task very often, since the
-            # assicurazione changes once every month.
-            # For now, let's put a waiting time of 6 hours, but we should
-            # think about a better way to wait for the right time to check
-            time.sleep(3600*6)
 
     @staticmethod
     def send_assicurazione(bot: TeleBot, chat_id):
