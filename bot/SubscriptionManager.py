@@ -18,7 +18,7 @@ class SubscriptionManager:
     def has_running_elements(self, chat_id):
         try:
             thread_list = self.threads_dict[chat_id]
-            return True
+            return len(thread_list) > 0
         except (KeyError, IndexError) as error:
             return False
 
@@ -51,6 +51,7 @@ class SubscriptionManager:
             for x in range(len(thread_list)):
                 if thread_list[x][0] == thread_name:
                     target_index = x
+                    break
 
             event: threading.Event = thread_list[x][2]
             thread: threading.Thread = thread_list[x][1]
@@ -58,5 +59,7 @@ class SubscriptionManager:
             thread.join()
             thread_list.pop(x)
             self.threads_dict[chat_id] = thread_list
+            return True
         except KeyError:
             print("Nessun thread per l'utente con id %id" % chat_id)
+            return False
