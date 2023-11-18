@@ -50,10 +50,6 @@ def subscribe_to_assicurazione(message):
         bot.reply_to(message, "Sei già iscritto")
 
 
-# endregion
-
-
-# TODO: Set the two buttons for the user and capture the answer
 @bot.message_handler(commands=['unsubscribe'])
 def unsubscribe(message):
     chat_id = message.from_user.id
@@ -93,6 +89,21 @@ def unsubscribe_callback(callback):
         bot.send_message(chat_id=chat_id,
                          text="Operazione non riuscita!!",
                          reply_markup=ReplyKeyboardRemove())
+
+
+# endregion
+
+# region CLOUD
+@bot.message_handler(commands=['upload_album'])
+def upload_album(message):
+    bot.reply_to(message=message, text="This method is currently in development")
+
+
+@bot.message_handler(commands=['download_album'])
+def download_album(message):
+    bot.reply_to(message=message, text="This method is currently in development")
+
+# endregion
 
 
 # Start the bot polling in a separate thread

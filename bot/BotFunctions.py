@@ -20,9 +20,13 @@ class BotFunctions:
     def set_default_commands(bot: TeleBot):
         bot.set_my_commands([
             telebot.types.BotCommand("/hello", "Sends a welcome message"),
+            telebot.types.BotCommand("/unsubscribe", "Unsubscribes from an active subscription"),
             telebot.types.BotCommand("/subscribe_test", "Activate the test thread. Just for didactic purpose"),
+            # ASSICURAZIONE
             telebot.types.BotCommand("/subscribe_assicurazione", "Activate the assicurazione thread. "),
-            telebot.types.BotCommand("/unsubscribe", "Unsubscribes from an active subscription")
+            # CLOUD
+            telebot.types.BotCommand("/upload_album", "Uploads a new photo collection to your personal cloud"),
+            telebot.types.BotCommand("/download_album", "Downloads a photo collection from your personal cloud")
         ])
 
     @staticmethod
