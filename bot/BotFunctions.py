@@ -1,10 +1,9 @@
-import time
 from threading import Event
 
 from telebot import *
 
 import Consts
-from assicurazione.CheckAssicurazione import CheckAssicurazione
+from modules.assicurazione.CheckAssicurazione import CheckAssicurazione
 
 
 # How to create a new function?

@@ -2,7 +2,7 @@ import telebot
 from telebot.types import *
 import Consts
 
-from BotFunctions import BotFunctions as bf
+from bot.BotFunctions import BotFunctions as bf
 from bot.SubscriptionManager import SubscriptionManager
 
 bot = telebot.TeleBot(Consts.bot_token, threaded=False)

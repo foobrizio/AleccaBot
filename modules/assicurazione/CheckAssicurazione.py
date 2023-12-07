@@ -1,5 +1,5 @@
-from assicurazione.DriverManager import DriverManager
-from assicurazione.PdfChecker import PdfChecker
+from modules.assicurazione.DriverManager import DriverManager
+from modules.assicurazione.PdfChecker import PdfChecker
 
 
 class CheckAssicurazione:
