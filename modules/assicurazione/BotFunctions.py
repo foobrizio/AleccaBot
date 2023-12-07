@@ -3,7 +3,7 @@ from threading import Event
 
 from telebot import TeleBot
 
-import Consts
+from modules.assicurazione import Consts
 from modules.assicurazione.CheckAssicurazione import CheckAssicurazione
 
 

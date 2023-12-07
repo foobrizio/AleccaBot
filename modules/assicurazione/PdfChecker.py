@@ -3,7 +3,7 @@ from datetime import datetime
 
 from PyPDF2 import PdfReader
 
-import Consts
+from modules.assicurazione import Consts
 
 
 class PdfChecker:
