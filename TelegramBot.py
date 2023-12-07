@@ -2,7 +2,10 @@ import telebot
 from telebot.types import *
 import Consts
 
+# BotFunctions
 from bot.BotFunctions import BotFunctions as bf
+from modules.assicurazione.BotFunctions import BotFunctions as assic_bf
+
 from bot.SubscriptionManager import SubscriptionManager
 
 bot = telebot.TeleBot(Consts.bot_token, threaded=False)
@@ -44,17 +47,13 @@ def subscribe_to_assicurazione(message):
     if not sub_mgr.is_subscribed(chat_id, subscription_name):
         sub_mgr.start_thread(chat_id=chat_id,
                              name=subscription_name,
-                             target=bf.check_assicurazione,
+                             target=assic_bf.check_assicurazione,
                              args=(bot, chat_id))
         bot.reply_to(message, "Perfetto, "+name+". Da ora riceverai aggiornamenti su "+subscription_name)
     else:
         bot.reply_to(message, "Sei già iscritto")
 
 
-# endregion
-
-
-# TODO: Set the two buttons for the user and capture the answer
 @bot.message_handler(commands=['unsubscribe'])
 def unsubscribe(message):
     chat_id = message.from_user.id
@@ -94,6 +93,12 @@ def unsubscribe_callback(callback):
         bot.send_message(chat_id=chat_id,
                          text="Operazione non riuscita!!",
                          reply_markup=ReplyKeyboardRemove())
+
+
+# endregion
+
+
+
 
 
 # Start the bot polling in a separate thread

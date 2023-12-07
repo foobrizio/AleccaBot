@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common import TimeoutException, StaleElementReferenceException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -26,15 +27,21 @@ class DriverManager:
         wait = self.wait
 
         driver.get(Consts.url)
+        time.sleep(1)
 
-        input_elements = driver.find_elements(By.CLASS_NAME, "tpd-inputPin")
+        made_it = False
+        while not made_it:
+            try:
+                input_elements = driver.find_elements(By.CLASS_NAME, "tpd-inputPin")
+                for index, elem in enumerate(input_elements):
+                    elem.send_keys(Consts.pin[index])
+                button = driver.find_element(By.XPATH, "//button[contains(@class, 'rosso')]")
+                wait.until(EC.element_to_be_clickable(button))
+                button.click()
+                made_it = True
+            except StaleElementReferenceException:
+                time.sleep(1)
 
-        for index, elem in enumerate(input_elements):
-            elem.send_keys(Consts.pin[index])
-
-        button = driver.find_element(By.XPATH, "//button[contains(@class, 'rosso')]")
-        wait.until(EC.element_to_be_clickable(button))
-        button.click()
         time.sleep(10)
 
     def tear_down(self):
