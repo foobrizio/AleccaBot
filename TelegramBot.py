@@ -2,7 +2,7 @@ import telebot
 from telebot.types import *
 import Consts
 
-from BotFunctions import BotFunctions as bf
+from bot.BotFunctions import BotFunctions as bf
 from bot.SubscriptionManager import SubscriptionManager
 
 bot = telebot.TeleBot(Consts.bot_token, threaded=False)
@@ -13,7 +13,8 @@ sub_mgr = SubscriptionManager()
 @bot.message_handler(commands=['start', 'hello'])
 def send_welcome(message):
     hello_message = "Ciao "+message.from_user.first_name+". Come va?"
-    bf.send_message(bot=bot,
+    bf.send_message(event=None,
+                    bot=bot,
                     chat_id=message.from_user.id,
                     message=hello_message)
 

@@ -1,10 +1,9 @@
-import time
 from threading import Event
 
 from telebot import *
 
 import Consts
-from assicurazione.CheckAssicurazione import CheckAssicurazione
+from modules.assicurazione.CheckAssicurazione import CheckAssicurazione
 
 
 # How to create a new function?
@@ -32,12 +31,15 @@ class BotFunctions:
     @staticmethod
     def send_message(event: Event, bot: TeleBot,  chat_id, message: str):
         cont = 0
-        while not event.is_set():
-            if cont == 4:
-                bot.send_message(chat_id=chat_id, text=message)
-                cont = 0
-            time.sleep(1)
-            cont = cont+1
+        if event is not None:
+            while not event.is_set():
+                if cont == 4:
+                    bot.send_message(chat_id=chat_id, text=message)
+                    cont = 0
+                time.sleep(1)
+                cont = cont+1
+        else:
+            bot.send_message(chat_id=chat_id, text=message)
 
     @staticmethod
     def check_assicurazione(event: Event, bot: TeleBot, chat_id):
