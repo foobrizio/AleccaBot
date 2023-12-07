@@ -4,3 +4,5 @@ AleccaBot is a personal Telegram bot designed to serve as a collection of functi
 This bot is easily extensible with new features, and its structure can be used as a foundation for any bot created using BotFather.
 
 This README file will be gradually enriched with a detailed description of how to use the bot
+
+Release v1.0 has a bug with /hello message
