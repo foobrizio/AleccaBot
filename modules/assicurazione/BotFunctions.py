@@ -18,9 +18,12 @@ class BotFunctions:
         cont = BotFunctions.interval
         while not event.is_set():
             if cont == BotFunctions.interval:
-                if CheckAssicurazione.check_da_scaricare():
-                    CheckAssicurazione.download()
-                    BotFunctions.send_assicurazione(bot, chat_id)
+                if CheckAssicurazione.is_da_scaricare():
+                    result = CheckAssicurazione.download()
+                    if result:
+                        BotFunctions.send_assicurazione(bot, chat_id)
+                    else:
+                        bot.send_message(chat_id=chat_id, text="Errore durante il download della nuova assicurazione")
                 cont = 0
             time.sleep(1)
             cont = cont + 1

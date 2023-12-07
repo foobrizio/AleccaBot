@@ -5,7 +5,7 @@ from modules.assicurazione.PdfChecker import PdfChecker
 class CheckAssicurazione:
 
     @staticmethod
-    def check_da_scaricare():
+    def is_da_scaricare():
         return not PdfChecker.exists() or not PdfChecker.is_assicurazione_valid()
 
     @staticmethod
@@ -13,4 +13,4 @@ class CheckAssicurazione:
         if PdfChecker.exists():
             PdfChecker.delete_old_file()
         mgr = DriverManager()
-        mgr.get_assicurazione()
+        return mgr.get_assicurazione()
