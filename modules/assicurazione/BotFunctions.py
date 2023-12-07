@@ -1,4 +1,4 @@
-from datetime import time
+import time
 from threading import Event
 
 from telebot import TeleBot
