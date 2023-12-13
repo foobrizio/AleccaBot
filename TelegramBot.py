@@ -7,6 +7,7 @@ from bot.SubscriptionManager import SubscriptionManager
 
 bot = telebot.TeleBot(Consts.bot_token, threaded=False)
 bf.set_default_commands(bot)
+bf.load_modules(bot=bot)
 sub_mgr = SubscriptionManager()
 
 
@@ -31,21 +32,6 @@ def subscribe_to_test(message):
                              name=subscription_name,
                              target=bf.send_message,
                              args=(bot, chat_id, "Questo è un test"))
-        bot.reply_to(message, "Perfetto, "+name+". Da ora riceverai aggiornamenti su "+subscription_name)
-    else:
-        bot.reply_to(message, "Sei già iscritto")
-
-
-@bot.message_handler(commands=['subscribe_assicurazione'])
-def subscribe_to_assicurazione(message):
-    subscription_name = "Assicurazione"
-    name = message.from_user.first_name
-    chat_id = message.from_user.id
-    if not sub_mgr.is_subscribed(chat_id, subscription_name):
-        sub_mgr.start_thread(chat_id=chat_id,
-                             name=subscription_name,
-                             target=bf.check_assicurazione,
-                             args=(bot, chat_id))
         bot.reply_to(message, "Perfetto, "+name+". Da ora riceverai aggiornamenti su "+subscription_name)
     else:
         bot.reply_to(message, "Sei già iscritto")
@@ -90,22 +76,7 @@ def unsubscribe_callback(callback):
         bot.send_message(chat_id=chat_id,
                          text="Operazione non riuscita!!",
                          reply_markup=ReplyKeyboardRemove())
-
-
-# endregion
-
-# region CLOUD
-@bot.message_handler(commands=['upload_album'])
-def upload_album(message):
-    bot.reply_to(message=message, text="This method is currently in development")
-
-
-@bot.message_handler(commands=['download_album'])
-def download_album(message):
-    bot.reply_to(message=message, text="This method is currently in development")
-
 # endregion
 
 
-# Start the bot polling in a separate thread
 bot.infinity_polling()

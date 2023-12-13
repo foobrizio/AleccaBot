@@ -3,8 +3,6 @@ from threading import Event
 from telebot import *
 
 import Consts
-from modules.assicurazione.CheckAssicurazione import CheckAssicurazione
-
 
 # How to create a new function?
 
@@ -12,6 +10,7 @@ from modules.assicurazione.CheckAssicurazione import CheckAssicurazione
 # 2) Use very short time.sleep period, because an eventual thread.join() will have to wait for the entire time.
 #    You can use a cont variable to artificially create a longer delay time between each execution of the
 #    function logic.
+
 
 class BotFunctions:
 
@@ -29,6 +28,11 @@ class BotFunctions:
         ])
 
     @staticmethod
+    def load_modules(bot: TeleBot):
+        pass
+        #bot.register_message_handler()
+
+    @staticmethod
     def send_message(event: Event, bot: TeleBot,  chat_id, message: str):
         cont = 0
         if event is not None:
@@ -40,21 +44,3 @@ class BotFunctions:
                 cont = cont+1
         else:
             bot.send_message(chat_id=chat_id, text=message)
-
-    @staticmethod
-    def check_assicurazione(event: Event, bot: TeleBot, chat_id):
-        cont = 0
-        while not event.is_set():
-            if cont == 3600*6:
-                if CheckAssicurazione.check_da_scaricare():
-                    CheckAssicurazione.download()
-                    BotFunctions.send_assicurazione(bot, chat_id)
-                cont = 0
-            time.sleep(1)
-            cont = cont+1
-
-    @staticmethod
-    def send_assicurazione(bot: TeleBot, chat_id):
-        file = open(Consts.document, 'rb')
-        bot.send_document(chat_id=chat_id,
-                          document=file)
