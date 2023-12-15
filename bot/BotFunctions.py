@@ -2,7 +2,8 @@ from threading import Event
 
 from telebot import *
 
-import Consts
+from modules.ModuleHandler import ModuleHandler
+
 
 # How to create a new function?
 
@@ -29,7 +30,8 @@ class BotFunctions:
 
     @staticmethod
     def load_modules(bot: TeleBot):
-        pass
+        mh = ModuleHandler()
+        commands = mh.discover_commands()
         #bot.register_message_handler()
 
     @staticmethod
