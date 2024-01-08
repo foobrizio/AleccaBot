@@ -1,21 +1,28 @@
 
 from telebot import TeleBot
+from telebot.types import Message
 
 from bot.SubscriptionManager import SubscriptionManager
-from Functions import Functions as funcs
+from modules.assicurazione.Functions import Functions as funcs
 from modules.IMessageHandler import IMessageHandler
 
 
 class MessageHandler(IMessageHandler):
 
     @staticmethod
-    def mapping():
+    def desc_mapping():
         return {
-            'subscribe_assicurazione': 'subscribe_to_assicurazione',
+            'subscribe_assicurazione': "Activate the assicurazione thread. ",
         }
 
     @staticmethod
-    def subscribe_to_assicurazione(message, sub_mgr: SubscriptionManager, bot: TeleBot):
+    def attach_commands(bot: TeleBot):
+        bot.register_message_handler(callback=MessageHandler.subscribe_to_assicurazione,
+                                     commands=["subscribe_assicurazione"],
+                                     pass_bot=True)
+
+    @staticmethod
+    def subscribe_to_assicurazione(message: Message, sub_mgr: SubscriptionManager, bot: TeleBot):
         subscription_name = "Assicurazione"
         name = message.from_user.first_name
         chat_id = message.from_user.id

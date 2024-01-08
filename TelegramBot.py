@@ -1,13 +1,13 @@
 import telebot
 from telebot.types import *
-import Consts
+from bot import Consts
 
 from bot.BotFunctions import BotFunctions as bf
 from bot.SubscriptionManager import SubscriptionManager
 
 bot = telebot.TeleBot(Consts.bot_token, threaded=False)
-bf.set_default_commands(bot)
-bf.load_modules(bot=bot)
+#bf.set_default_commands(bot=bot)
+bf.update_commands(bot=bot)
 sub_mgr = SubscriptionManager()
 
 
@@ -41,6 +41,7 @@ def subscribe_to_test(message):
 def unsubscribe(message):
     chat_id = message.from_user.id
     if sub_mgr.has_running_elements(chat_id):
+        # Abbiamo delle iscrizioni a cui possiamo disiscriverci.
         elements = sub_mgr.get_running_elements(chat_id)
         buttons = ReplyKeyboardMarkup(one_time_keyboard=True, selective=True)
         if len(elements) > 1:
